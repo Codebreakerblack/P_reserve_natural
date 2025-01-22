@@ -1,4 +1,4 @@
-package dev.mariel.P_reserve_natural.models;
+package dev.mariel.P_reserve_natural.Animal;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;

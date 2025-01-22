@@ -1,7 +1,5 @@
-package dev.mariel.P_reserve_natural.services;
+package dev.mariel.P_reserve_natural.User;
 
-import dev.mariel.P_reserve_natural.models.User;
-import dev.mariel.P_reserve_natural.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

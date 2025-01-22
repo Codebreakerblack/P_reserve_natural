@@ -1,7 +1,5 @@
-package dev.mariel.P_reserve_natural.services;
+package dev.mariel.P_reserve_natural.Animal;
 
-import dev.mariel.P_reserve_natural.models.Animal;
-import dev.mariel.P_reserve_natural.repositories.AnimalRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

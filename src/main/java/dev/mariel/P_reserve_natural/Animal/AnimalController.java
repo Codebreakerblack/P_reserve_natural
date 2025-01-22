@@ -1,7 +1,5 @@
-package dev.mariel.P_reserve_natural.controllers;
+package dev.mariel.P_reserve_natural.Animal;
 
-import dev.mariel.P_reserve_natural.models.Animal;
-import dev.mariel.P_reserve_natural.services.AnimalService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

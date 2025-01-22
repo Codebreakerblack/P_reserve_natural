@@ -1,6 +1,5 @@
-package dev.mariel.P_reserve_natural.repositories;
+package dev.mariel.P_reserve_natural.User;
 
-import dev.mariel.P_reserve_natural.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

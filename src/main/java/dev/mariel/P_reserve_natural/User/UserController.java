@@ -1,7 +1,5 @@
-package dev.mariel.P_reserve_natural.controllers;
+package dev.mariel.P_reserve_natural.User;
 
-import dev.mariel.P_reserve_natural.models.User;
-import dev.mariel.P_reserve_natural.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
