@@ -3,6 +3,7 @@ package dev.mariel.P_reserve_natural.config;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import dev.mariel.P_reserve_natural.security.JpaUserDetailsService;
+import dev.mariel.P_reserve_natural.security.SessionCookieFilter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,20 +15,21 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${api-endpoint:/api}")
+    @Value("${api-endpoint:/api/animales}")
     String endpoint;
 
-    private JpaUserDetailsService jpaUserDetailsService;
+    private final JpaUserDetailsService jpaUserDetailsService;
 
     public SecurityConfig(JpaUserDetailsService userDetailsService) {
-                this.jpaUserDetailsService = userDetailsService;
-        }
+        this.jpaUserDetailsService = userDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,26 +39,25 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())
                 .logout(out -> out
-                        .logoutUrl(endpoint + "/logout")
+                        .logoutUrl("/api/auth/logout")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID"))
+                        .deleteCookies("JSESSIONID", "SESSION_ID"))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll() // Consola H2
-                        .requestMatchers(endpoint).permitAll() // Punto de inicio público
-                        .requestMatchers(HttpMethod.POST, endpoint + "/register").permitAll() // Registro público
-                        .requestMatchers(endpoint + "/login").hasAnyRole("USER", "ADMIN") // Usuarios autenticados
-                        .requestMatchers(endpoint + "/public").permitAll() // Endpoint público
-                        .requestMatchers(endpoint + "/private").hasRole("ADMIN") // Sólo admins
-                        .requestMatchers(HttpMethod.GET, endpoint + "/countries").hasAnyRole("USER", "ADMIN") // Lectura
-                                                                                                              // países
-                        .requestMatchers(HttpMethod.POST, endpoint + "/countries").hasRole("ADMIN") // Creación países
-                        .anyRequest().authenticated()) // Todos los demás requieren autenticación
-                .userDetailsService(jpaUserDetailsService) // Servicio personalizado para cargar usuarios
-                .httpBasic(withDefaults()) // Autenticación básica
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, endpoint).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, endpoint).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, endpoint + "/{nombre}").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, endpoint + "/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, endpoint + "/{id}").hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                .userDetailsService(jpaUserDetailsService)
+                .httpBasic(withDefaults())
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)); // Gestión de sesiones
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.headers(header -> header.frameOptions(frame -> frame.sameOrigin())); // Permitir H2 en frames
+        // 🔹 Aquí agregamos nuestro filtro para manejar las cookies de sesión
+        http.addFilterAfter(new SessionCookieFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
