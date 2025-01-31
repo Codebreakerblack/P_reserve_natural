@@ -56,7 +56,6 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // 🔹 Aquí agregamos nuestro filtro para manejar las cookies de sesión
         http.addFilterAfter(new SessionCookieFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
