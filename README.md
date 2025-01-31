@@ -13,7 +13,7 @@ This API allows the management of a nature reserve, including animal administrat
   - maven
   - Docker
 
-- **API endpoints**:
+**API endpoints**:
 
 |  Method     | Endpoint                   | Description                                     | Authorization|
 |-------------|----------------------------|-------------------------------------------------|--------------|
@@ -30,7 +30,7 @@ This API allows the management of a nature reserve, including animal administrat
 | POST        | /api/auth/logout           | Logout and clear session cookies                | Public       |
 
 
-- **Diagram**:
+**Diagram**:
 [![Captura-desde-2025-01-31-23-06-59.png](https://i.postimg.cc/g2YKLB5k/Captura-desde-2025-01-31-23-06-59.png)](https://postimg.cc/BXVFdN4d)
     
 
